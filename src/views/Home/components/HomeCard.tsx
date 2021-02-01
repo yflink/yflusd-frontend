@@ -43,7 +43,7 @@ const HomeCard: React.FC<HomeCardProps> = ({
           </CardSection>
 
           <CardSection>
-            {stat ? <StyledValue>{commify(stat.totalSupply)}</StyledValue> : <ValueSkeleton />}
+            {stat ? <StyledValue>{symbol === 'YFLUSD' ? commify(Number(stat.totalSupply) - 43000)  : commify(stat.totalSupply)}</StyledValue> : <ValueSkeleton />}
             <StyledSupplyLabel href={tokenUrl} target="_blank">
               {supplyLabel}
             </StyledSupplyLabel>
