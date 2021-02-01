@@ -33,8 +33,8 @@ const Bank: React.FC = () => {
         <Page>
           <LaunchCountdown
             deadline={config.baseLaunchDate}
-            description="How do the pools work?"
-            descriptionLink="https://learn.yflink.io/mechanisms/pools"
+            description="Read about YFLUSD"
+            descriptionLink="http://www.blog.yflink.io/yflusd/"
           />
         </Page>
       </Switch>

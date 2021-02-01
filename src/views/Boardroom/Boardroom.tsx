@@ -73,8 +73,8 @@ const Boardroom: React.FC = () => {
         <Page>
           <LaunchCountdown
             deadline={config.boardroomLaunchesAt}
-            description="How does the boardroom work?"
-            descriptionLink="https://learn.yflink.io/mechanisms/stabilization-mechanism#expansionary-policy"
+            description="Read about YFLUSD"
+            descriptionLink="http://www.blog.yflink.io/yflusd/"
           />
         </Page>
       </Switch>

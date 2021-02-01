@@ -54,8 +54,8 @@ const Bond: React.FC = () => {
         <Page>
           <LaunchCountdown
             deadline={config.bondLaunchesAt}
-            description="How does YFLink Bond work?"
-            descriptionLink="https://learn.yflink.io/mechanisms/stabilization-mechanism"
+            description="Read about YFLUSD"
+            descriptionLink="http://www.blog.yflink.io/yflusd/"
           />
         </Page>
       </Switch>
