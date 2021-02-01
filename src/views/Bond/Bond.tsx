@@ -55,7 +55,7 @@ const Bond: React.FC = () => {
           <LaunchCountdown
             deadline={config.bondLaunchesAt}
             description="Learn more"
-            descriptionLink="http://www.blog.yflink.io/yflusd/"
+            descriptionLink="https://blog.yflink.io/yflusd/"
           />
         </Page>
       </Switch>
