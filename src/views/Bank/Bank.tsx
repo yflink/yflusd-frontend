@@ -22,8 +22,6 @@ const Bank: React.FC = () => {
   const { bankId } = useParams();
   const bank = useBank(bankId);
 
-  console.log(bank);
-
   const { account } = useWallet();
   const { onRedeem } = useRedeem(bank);
   const isLaunched = Date.now() >= config.baseLaunchDate.getTime();
@@ -33,7 +31,7 @@ const Bank: React.FC = () => {
         <Page>
           <LaunchCountdown
             deadline={config.baseLaunchDate}
-            description="Read about YFLUSD"
+            description="Learn more"
             descriptionLink="http://www.blog.yflink.io/yflusd/"
           />
         </Page>

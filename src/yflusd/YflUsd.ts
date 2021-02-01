@@ -77,7 +77,6 @@ export class YflUsd {
       token.connect(this.signer);
     }
     this.yflusdEth = this.yflusdEth.connect(this.signer);
-    console.log(`🔓 Wallet is unlocked. Welcome, ${account}!`);
     this.fetchBoardroomVersionOfUser()
       .then((version) => (this.boardroomVersionOfUser = version))
       .catch((err) => {
@@ -92,7 +91,6 @@ export class YflUsd {
 
   gasOptions(gas: BigNumber): Overrides {
     const multiplied = Math.floor(gas.toNumber() * this.config.gasLimitMultiplier);
-    console.log(`⛽️ Gas multiplied: ${gas} -> ${multiplied}`);
     return {
       gasLimit: BigNumber.from(multiplied),
     };

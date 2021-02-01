@@ -20,7 +20,7 @@ const Banks: React.FC = () => {
         <Page>
           <LaunchCountdown
             deadline={config.baseLaunchDate}
-            description="Read about YFLUSD"
+            description="Learn more"
             descriptionLink="http://www.blog.yflink.io/yflusd/"
           />
         </Page>
