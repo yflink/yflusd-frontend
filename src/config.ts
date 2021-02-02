@@ -25,7 +25,7 @@ const configurations: { [env: string]: Configuration } = {
     baseLaunchDate: new Date('2021-02-01T20:00:00Z'),
     bondLaunchesAt: new Date('2021-02-04T00:00:00Z'),
     boardroomLaunchesAt: new Date('2021-02-04T00:00:00Z'),
-    refreshInterval: 30000,
+    refreshInterval: 1000,
     gasLimitMultiplier: 1.7,
   },
   production: {
@@ -50,7 +50,7 @@ const configurations: { [env: string]: Configuration } = {
     baseLaunchDate: new Date('2021-02-01T20:00:00Z'),
     bondLaunchesAt: new Date('2021-02-04T00:00:00Z'),
     boardroomLaunchesAt: new Date('2021-02-04T00:00:00Z'),
-    refreshInterval: 30000,
+    refreshInterval: 1000,
     gasLimitMultiplier: 1.7,
   },
 };

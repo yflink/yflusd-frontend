@@ -15,7 +15,6 @@ const AccountButton: React.FC<AccountButtonProps> = (props) => {
   const [onPresentAccountModal] = useModal(<AccountModal />);
 
   const { account, connect } = useWallet();
-
   return (
     <StyledAccountButton>
       {!account ? (
