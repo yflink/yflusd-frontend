@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
-import YflUsd, { Bank } from '../../yflusd';
+import { Bank } from '../../yflusd';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import CardContent from '../../components/CardContent';
