@@ -7,6 +7,7 @@ import ERC20 from './ERC20';
 import { getDisplayBalance } from '../utils/formatBalance';
 import { getDefaultProvider } from '../utils/provider';
 import ILinkswapPairABI from './ILinkswapPair.abi.json';
+import POOLABI from './Pool.abi.json';
 
 /**
  * An API module of YFLUSD contracts.
@@ -24,15 +25,112 @@ export class YflUsd {
 
   yflusdEth: Contract;
   syflEth: Contract;
+  yflusdLink: Contract;
+  syflLink: Contract;
   YFLUSD: ERC20;
   SYFL: ERC20;
   BYFL: ERC20;
+  tokens: Record<string, any>;
+  pools: Record<string, any>;
 
   constructor(cfg: Configuration) {
     const { deployments, externalTokens } = cfg;
     const provider = getDefaultProvider();
-
     this.ethPriceAPI = cfg.ethPriceAPI;
+
+    this.tokens = {
+      ETH: { usd: 0 },
+      BONK: { usd: 0 },
+      DOKI: { usd: 0 },
+      LINK: { usd: 0 },
+      MASQ: { usd: 0 },
+      SYFL: { usd: 0 },
+      SYAX: { usd: 0 },
+      YFL: { usd: 0 },
+      YFLUSD: { usd: 0 },
+      yflusdEth: {
+        token0: { amount: 0, symbol: 'YFLUSD' },
+        token1: { amount: 0, symbol: 'ETH' },
+        totalSupply: 0,
+      },
+      yflusdLink: {
+        token0: { amount: 0, symbol: 'LINK' },
+        token1: { amount: 0, symbol: 'YFLUSD' },
+        totalSupply: 0,
+      },
+      syflEth: {
+        token0: { amount: 0, symbol: 'SYFL' },
+        token1: { amount: 0, symbol: 'ETH' },
+        totalSupply: 0,
+      },
+      syflLink: {
+        token0: { amount: 0, symbol: 'LINK' },
+        token1: { amount: 0, symbol: 'SYFL' },
+        totalSupply: 0,
+      },
+    };
+    this.pools = {
+      BONK: {
+        address: '0xA54550653b6F5D55CB8D258a3Ed7c653eb186cC0',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      DOKI: {
+        address: '0xFa60fFae050Edda279399209f3BBc0AC59327c88',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      LINK: {
+        address: '0x4043D9BF3bC91893604c0281Dac857e6F24824a1',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      MASQ: {
+        address: '0x77eAddB37d116D0272fda5d6441e4423950C8427',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      YFL: {
+        address: '0x5f35334ef7E38EBE1f94d31E6fC3d78b477f4f91',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      SYAX: {
+        address: '0xEB94b4a6700F5b5DaDB9ecb2973bEACB71A17bCD',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'YFLUSD',
+      },
+      'ETH-YFLUSD-LSLP': {
+        address: '0x6DddCc7F963C65b18FdDD842e6553528f014aDeA',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'SYFL',
+      },
+      'ETH-SYFL-LSLP': {
+        address: '0x81C76925E7F41f0306E1147c4659784d4402bD51',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'SYFL',
+      },
+      'LINK-YFLUSD-LSLP': {
+        address: '0x61401c19200B2420f93Bb2EECF4BAA2C193d76e1',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'SYFL',
+      },
+      'LINK-SYFL-LSLP': {
+        address: '0x1b650B522b864f6BF61705A05cc89b2b0e23f9C6',
+        totalSupply: 0,
+        rewardRate: 0,
+        rewardToken: 'SYFL',
+      },
+    };
 
     // loads contracts from deployments
     this.contracts = {};
@@ -53,11 +151,29 @@ export class YflUsd {
       ILinkswapPairABI,
       provider,
     );
-
+    this.yflusdLink = new Contract(
+      externalTokens['LINK-YFLUSD-LSLP'][0],
+      ILinkswapPairABI,
+      provider,
+    );
     this.syflEth = new Contract(externalTokens['ETH-SYFL-LSLP'][0], ILinkswapPairABI, provider);
+    this.syflLink = new Contract(
+      externalTokens['LINK-SYFL-LSLP'][0],
+      ILinkswapPairABI,
+      provider,
+    );
 
     this.config = cfg;
     this.provider = provider;
+
+    this.getTokenPriceFromLinkswap([this.SYFL, this.syflEth]);
+    this.getTokenPricesFromLinkswap();
+    this.getPoolStats();
+
+    this.getLPTokenPriceFromLinkswap(this.yflusdEth, 'yflusdEth');
+    this.getLPTokenPriceFromLinkswap(this.yflusdLink, 'yflusdLink');
+    this.getLPTokenPriceFromLinkswap(this.syflEth, 'syflEth');
+    this.getLPTokenPriceFromLinkswap(this.syflLink, 'syflLink');
   }
 
   /**
@@ -164,9 +280,20 @@ export class YflUsd {
     };
   }
 
-  async getTokenPriceFromLinkswap([tokenContract, pairContract]: any[]): Promise<string> {
-    await this.provider.ready;
+  async getLPTokenPriceFromLinkswap(pairContract: Contract, symbol: string): Promise<boolean> {
+    try {
+      const [reserve0, reserve1] = await pairContract.getReserves();
+      this.tokens[symbol].token0.amount = reserve0 / 1000000000000000000;
+      this.tokens[symbol].token1.amount = reserve1 / 1000000000000000000;
+      const supply = await pairContract.totalSupply();
+      this.tokens[symbol].totalSupply = supply / 1000000000000000000;
+      return true;
+    } catch (err) {
+      console.error(`Failed to fetch reserves: ${err}`);
+    }
+  }
 
+  async getTokenPriceFromLinkswap([tokenContract, pairContract]: any[]): Promise<string> {
     try {
       const [reserve0, reserve1] = await pairContract.getReserves();
       const token0 = await pairContract.token0();
@@ -178,19 +305,89 @@ export class YflUsd {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: '{"query":"{ bundles { ethPrice }}"}',
+        body: '{"query":"{ bundles { ethPrice syflPrice yflusdPrice }}"}',
         method: 'POST',
       });
       let ethPrice = 0;
       if (response.ok) {
         const content = await response.json();
         ethPrice = content.data.bundles[0].ethPrice;
+        this.tokens.ETH.usd = ethPrice;
+        this.tokens.SYFL.usd = content.data.bundles[0].syflPrice;
+        this.tokens.YFLUSD.usd = content.data.bundles[0].yflusdPrice;
       }
       const priceInUsd = Number(ethPrice) * Number(priceInEth);
 
       return priceInUsd.toFixed(2);
     } catch (err) {
       console.error(`Failed to fetch token price of ${tokenContract.symbol}: ${err}`);
+    }
+  }
+
+  async getTokenPricesFromLinkswap(): Promise<boolean> {
+    try {
+      const response = await fetch(this.ethPriceAPI, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:
+          '{"query":"{ tokenDayDatas(orderBy: date, orderDirection: desc) { token {  symbol } priceUSD  }}","variables":null}',
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const content = await response.json();
+        const tokenData = content.data.tokenDayDatas;
+        tokenData.forEach((token: any) => {
+          switch (token.token.symbol) {
+            case 'BONK':
+              this.tokens.BONK.usd = token.priceUSD;
+              break;
+            case 'DOKI':
+              this.tokens.DOKI.usd = token.priceUSD;
+              break;
+            case 'LINK':
+              this.tokens.LINK.usd = token.priceUSD;
+              break;
+            case 'MASQ':
+              this.tokens.MASQ.usd = token.priceUSD;
+              break;
+            case 'YAX':
+              this.tokens.SYAX.usd = token.priceUSD * 1.5;
+              break;
+            case 'YFL':
+              this.tokens.YFL.usd = token.priceUSD;
+              break;
+          }
+        });
+      }
+      return true;
+    } catch (err) {
+      console.error(`Failed to fetch token prices: ${err}`);
+    }
+  }
+
+  async getPoolStats(): Promise<boolean> {
+    const provider = getDefaultProvider();
+    const _that = this;
+    Object.keys(this.pools).forEach(function (key) {
+      const contract: Contract = new Contract(_that.pools[key].address, POOLABI, provider);
+      _that.poolStats(contract, key);
+    });
+    return true;
+  }
+
+  async poolStats(contract: Contract, symbol: string): Promise<boolean> {
+    try {
+      const supply = await contract.totalSupply();
+      this.pools[symbol].totalSupply = getDisplayBalance(supply, 18, 0);
+      const rewardRate = await contract.rewardRate();
+      this.pools[symbol].rewardRate = (rewardRate / 1e18) * 86400 * 365;
+
+      return true;
+    } catch (err) {
+      console.error(`Failed to fetch pool supply: ${err}`);
     }
   }
 

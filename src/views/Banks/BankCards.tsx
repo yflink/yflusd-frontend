@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Bank } from '../../yflusd';
+import YflUsd, { Bank } from '../../yflusd';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import CardContent from '../../components/CardContent';
@@ -9,6 +9,7 @@ import CardIcon from '../../components/CardIcon';
 import useBanks from '../../hooks/useBanks';
 import TokenSymbol from '../../components/TokenSymbol';
 import Notice from '../../components/Notice';
+import useYflUsd from '../../hooks/useYflUsd';
 
 const BankCards: React.FC = () => {
   const [banks] = useBanks();
@@ -72,15 +73,51 @@ interface BankCardProps {
 }
 
 const BankCard: React.FC<BankCardProps> = ({ bank }) => {
+  const isLSLP = bank.depositTokenName.includes('LSLP');
+  const yflUsd = useYflUsd();
+  let apy;
+  let pool;
+  let token;
+  let TVL;
+  let yearlyRateUSD;
+  let perDepositedDollarYearlyReward;
+
+  pool = yflUsd.pools[bank.depositTokenName];
+  yearlyRateUSD = yflUsd.tokens[pool.rewardToken].usd * pool.rewardRate;
+
+  if (isLSLP) {
+    switch (bank.depositTokenName) {
+      case 'LINK-YFLUSD-LSLP':
+        token = yflUsd.tokens['yflusdLink'];
+        break;
+      case 'ETH-YFLUSD-LSLP':
+        token = yflUsd.tokens['yflusdEth'];
+        break;
+      case 'ETH-SYFL-LSLP':
+        token = yflUsd.tokens['syflEth'];
+        break;
+      case 'LINK-SYFL-LSLP':
+        token = yflUsd.tokens['syflLink'];
+        break;
+    }
+    TVL =
+      token.token0.amount * yflUsd.tokens[token.token0.symbol].usd +
+      token.token1.amount * yflUsd.tokens[token.token1.symbol].usd;
+    perDepositedDollarYearlyReward = yearlyRateUSD / TVL;
+    apy = perDepositedDollarYearlyReward * 100;
+  } else {
+    TVL = Number(pool.totalSupply) * yflUsd.tokens[bank.depositTokenName].usd;
+    perDepositedDollarYearlyReward = yearlyRateUSD / TVL;
+    apy = perDepositedDollarYearlyReward * 100;
+  }
+
   return (
     <StyledCardWrapper>
-      {bank.depositTokenName.includes('YFLUSD') && (
-        <StyledCardIndicator>6x</StyledCardIndicator>
-      )}
-      <Card highlight={bank.depositTokenName.includes('YFLUSD')}>
+      {apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
+      <Card highlight={bank.depositTokenName.includes('LSLP')}>
         <CardContent>
           <StyledContent>
-            {bank.depositTokenName.includes('LSLP') ? (
+            {isLSLP ? (
               <CardIcon pair={true}>
                 <TokenSymbol symbol={bank.depositTokenName} size={80} pair={true} />
               </CardIcon>
@@ -108,11 +145,11 @@ const StyledCards = styled.div`
   width: 100%;
 `;
 
-const StyledCardIndicator = styled.div`
+const APYIndicator = styled.div`
   position: absolute;
-  left: 0px;
-  top: 0px;
-  font-size: 30px;
+  right: 30px;
+  top: 30px;
+  font-size: 15px;
   color: ${(props) => props.theme.color.mainTextColor};
 `;
 
