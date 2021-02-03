@@ -229,20 +229,21 @@ export class YflUsd {
    * calculated by 1-day Time-Weight Averaged Price (TWAP).
    */
   async getCashStatInEstimatedTWAP(): Promise<TokenStat> {
-    const { Oracle } = this.contracts;
+    const { Oracle, Treasury } = this.contracts;
 
     // estimate current TWAP price
-    const cumulativePrice: BigNumber = await this.yflusdEth.price0CumulativeLast();
-    const cumulativePriceLast = await Oracle.price0CumulativeLast();
-    const elapsedSec = Math.floor(Date.now() / 1000 - (await Oracle.blockTimestampLast()));
-
-    const denominator112 = BigNumber.from(2).pow(112);
-    const denominator1e18 = BigNumber.from(10).pow(18);
-    const cashPriceTWAP = cumulativePrice
-      .sub(cumulativePriceLast)
-      .mul(denominator1e18)
-      .div(elapsedSec)
-      .div(denominator112);
+    const number1e18 = BigNumber.from(10).pow(18);
+    const number1e8 = BigNumber.from(10).pow(8);
+    const expectedPriceInEth = BigNumber.from(
+      await Oracle.expectedPrice(this.YFLUSD.address, number1e18),
+    );
+    const wethUsdPrice = BigNumber.from(
+      await Treasury.getLinkswapPriceOracleUsdPrice(
+        this.externalTokens['WETH'].address,
+        number1e18,
+      ),
+    );
+    const cashPriceTWAP = expectedPriceInEth.mul(wethUsdPrice).div(number1e8);
 
     const totalSupply = await this.YFLUSD.displayedTotalSupply();
     return {
