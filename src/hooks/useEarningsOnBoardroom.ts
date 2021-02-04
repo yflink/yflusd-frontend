@@ -8,16 +8,17 @@ const useEarningsOnBoardroom = () => {
   const yflUsd = useYflUsd();
 
   const fetchBalance = useCallback(async () => {
+    if (typeof yflUsd.myAccount === 'undefined') {
+      return;
+    }
     setBalance(await yflUsd.getEarningsOnBoardroom());
   }, [yflUsd, setBalance]);
 
   useEffect(() => {
-    if (yflUsd?.isUnlocked) {
-      fetchBalance().catch((err) => console.error(err.stack));
+    fetchBalance().catch((err) => console.error(err.stack));
 
-      const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
-      return () => clearInterval(refreshBalance);
-    }
+    const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
+    return () => clearInterval(refreshBalance);
   }, [yflUsd, fetchBalance]);
 
   return balance;

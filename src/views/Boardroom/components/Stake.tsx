@@ -64,6 +64,8 @@ const Stake: React.FC = () => {
     />,
   );
 
+  console.log(yflUsd);
+
   return (
     <Card>
       <CardContent>
@@ -74,6 +76,17 @@ const Stake: React.FC = () => {
             </CardIcon>
             <Value value={getDisplayBalance(stakedBalance)} />
             <Label text="sYFL Staked" />
+            {Number(getDisplayBalance(stakedBalance)) > 0 ? (
+              <DollarValue>
+                (~
+                {(
+                  Number(getDisplayBalance(stakedBalance)) * yflUsd.tokens.SYFL.usd
+                ).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+                )
+              </DollarValue>
+            ) : (
+              <DollarValue>($0.00)</DollarValue>
+            )}
           </StyledCardHeader>
           <StyledCardActions>
             {!isOldBoardroomMember && approveStatus !== ApprovalState.APPROVED ? (
@@ -104,6 +117,13 @@ const Stake: React.FC = () => {
     </Card>
   );
 };
+
+const DollarValue = styled.div`
+  margin: 3px 0;
+  display: flex;
+  justify-content: center;
+  color: ${(props) => props.theme.color.grey[600]};
+`;
 
 const StyledCardHeader = styled.div`
   align-items: center;

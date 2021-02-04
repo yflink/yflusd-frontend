@@ -11,11 +11,12 @@ import CardIcon from '../../../components/CardIcon';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
 import { getDisplayBalance } from '../../../utils/formatBalance';
+import useYflUsd from '../../../hooks/useYflUsd';
 
 const Harvest: React.FC = () => {
   const { onReward } = useHarvestFromBoardroom();
   const earnings = useEarningsOnBoardroom();
-
+  const yflUsd = useYflUsd();
   return (
     <Card>
       <CardContent>
@@ -26,6 +27,17 @@ const Harvest: React.FC = () => {
             </CardIcon>
             <Value value={getDisplayBalance(earnings)} />
             <Label text="YFLUSD Earned" />
+            {Number(getDisplayBalance(earnings)) > 0 ? (
+              <DollarValue>
+                (~
+                {(
+                  Number(getDisplayBalance(earnings)) * yflUsd.tokens.YFLUSD.usd
+                ).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+                )
+              </DollarValue>
+            ) : (
+              <DollarValue>($0.00)</DollarValue>
+            )}
           </StyledCardHeader>
           <StyledCardActions>
             <Button
@@ -40,6 +52,13 @@ const Harvest: React.FC = () => {
     </Card>
   );
 };
+
+const DollarValue = styled.div`
+  margin: 3px 0;
+  display: flex;
+  justify-content: center;
+  color: ${(props) => props.theme.color.grey[600]};
+`;
 
 const StyledCardHeader = styled.div`
   align-items: center;
