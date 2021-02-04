@@ -23,6 +23,7 @@ import DepositModal from './DepositModal';
 import WithdrawModal from './WithdrawModal';
 import TokenSymbol from '../../../components/TokenSymbol';
 import { Bank } from '../../../yflusd';
+import useYflUsd from '../../../hooks/useYflUsd';
 
 interface StakeProps {
   bank: Bank;
@@ -62,23 +63,81 @@ const Stake: React.FC<StakeProps> = ({ bank }) => {
     />,
   );
 
+  const yflUsd = useYflUsd();
+
+  const isLSLP = bank.depositTokenName.includes('LSLP');
+  let token;
+  let TVL;
+  let tokenPrice;
+  if (isLSLP) {
+    switch (bank.depositTokenName) {
+      case 'LINK-YFLUSD-LSLP':
+        token = yflUsd.tokens['yflusdLink'];
+        break;
+      case 'ETH-YFLUSD-LSLP':
+        token = yflUsd.tokens['yflusdEth'];
+        break;
+      case 'ETH-SYFL-LSLP':
+        token = yflUsd.tokens['syflEth'];
+        break;
+      case 'LINK-SYFL-LSLP':
+        token = yflUsd.tokens['syflLink'];
+        break;
+    }
+    TVL =
+      token.token0.amount * yflUsd.tokens[token.token0.symbol].usd +
+      token.token1.amount * yflUsd.tokens[token.token1.symbol].usd;
+
+    tokenPrice = TVL / Number(yflUsd.pools[bank.depositTokenName].totalSupply);
+  }
+
+  const stakedBalanceDisplay = getDisplayBalance(stakedBalance, bank.depositToken.decimal);
+
   return (
     <Card>
       <CardContent>
         <StyledCardContentInner>
-          <StyledCardHeader>
-            {bank.depositTokenName.includes('LSLP') ? (
+          {isLSLP ? (
+            <StyledCardHeader>
               <CardIcon pair={true}>
                 <TokenSymbol symbol={bank.depositTokenName} size={80} pair={true} />
               </CardIcon>
-            ) : (
+              <Value value={stakedBalanceDisplay} />
+              <Label text={`${bank.depositTokenName} Staked`} />
+              {Number(stakedBalanceDisplay) > 0 ? (
+                <DollarValue>
+                  (~
+                  {(Number(stakedBalanceDisplay) * tokenPrice).toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                  })}
+                  )
+                </DollarValue>
+              ) : (
+                <DollarValue>($0.00)</DollarValue>
+              )}
+            </StyledCardHeader>
+          ) : (
+            <StyledCardHeader>
               <CardIcon>
                 <TokenSymbol symbol={bank.depositTokenName} size={76} />
               </CardIcon>
-            )}
-            <Value value={getDisplayBalance(stakedBalance, bank.depositToken.decimal)} />
-            <Label text={`${bank.depositTokenName} Staked`} />
-          </StyledCardHeader>
+              <Value value={stakedBalanceDisplay} />
+              <Label text={`${bank.depositTokenName} Staked`} />
+              {Number(stakedBalanceDisplay) > 0 ? (
+                <DollarValue>
+                  (~
+                  {(
+                    Number(stakedBalanceDisplay) * yflUsd.tokens[bank.depositTokenName].usd
+                  ).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+                  )
+                </DollarValue>
+              ) : (
+                <DollarValue>($0.00)</DollarValue>
+              )}
+            </StyledCardHeader>
+          )}
+
           <StyledCardActions>
             {approveStatus !== ApprovalState.APPROVED ? (
               <Button
@@ -111,6 +170,13 @@ const Stake: React.FC<StakeProps> = ({ bank }) => {
   );
 };
 
+const DollarValue = styled.div`
+  margin: 3px 0;
+  display: flex;
+  justify-content: center;
+  color: ${(props) => props.theme.color.grey[600]};
+`;
+
 const StyledCardHeader = styled.div`
   align-items: center;
   display: flex;
@@ -119,7 +185,7 @@ const StyledCardHeader = styled.div`
 const StyledCardActions = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: ${(props) => props.theme.spacing[6]}px;
+  margin-top: 24px;
   width: 100%;
 `;
 

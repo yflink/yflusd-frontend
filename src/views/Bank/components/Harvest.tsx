@@ -13,6 +13,7 @@ import useHarvest from '../../../hooks/useHarvest';
 import { getDisplayBalance } from '../../../utils/formatBalance';
 import TokenSymbol from '../../../components/TokenSymbol';
 import { Bank } from '../../../yflusd';
+import useYflUsd from '../../../hooks/useYflUsd';
 
 interface HarvestProps {
   bank: Bank;
@@ -21,7 +22,7 @@ interface HarvestProps {
 const Harvest: React.FC<HarvestProps> = ({ bank }) => {
   const earnings = useEarnings(bank.contract);
   const { onReward } = useHarvest(bank);
-
+  const yflUsd = useYflUsd();
   const tokenName = bank.earnTokenName;
   return (
     <Card>
@@ -33,6 +34,17 @@ const Harvest: React.FC<HarvestProps> = ({ bank }) => {
             </CardIcon>
             <Value value={getDisplayBalance(earnings)} />
             <Label text={`${tokenName} Earned`} />
+            {Number(getDisplayBalance(earnings)) > 0 ? (
+              <DollarValue>
+                (~
+                {(
+                  Number(getDisplayBalance(earnings)) * yflUsd.tokens[tokenName].usd
+                ).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+                )
+              </DollarValue>
+            ) : (
+              <DollarValue>($0.00)</DollarValue>
+            )}
           </StyledCardHeader>
           <StyledCardActions>
             <Button
@@ -47,6 +59,13 @@ const Harvest: React.FC<HarvestProps> = ({ bank }) => {
     </Card>
   );
 };
+
+const DollarValue = styled.div`
+  margin: 3px 0;
+  display: flex;
+  justify-content: center;
+  color: ${(props) => props.theme.color.grey[600]};
+`;
 
 const StyledCardHeader = styled.div`
   align-items: center;
