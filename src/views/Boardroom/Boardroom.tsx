@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useWallet } from 'use-wallet';
 
