@@ -43,7 +43,15 @@ const HomeCard: React.FC<HomeCardProps> = ({
           </CardSection>
 
           <CardSection>
-            {stat ? <StyledValue>{symbol === 'YFLUSD' ? commify(Number(stat.totalSupply) - 43000)  : commify(stat.totalSupply)}</StyledValue> : <ValueSkeleton />}
+            {stat ? (
+              <StyledValue>
+                {symbol === 'YFLUSD'
+                  ? commify(Number(stat.totalSupply) - 43000)
+                  : commify(stat.totalSupply)}
+              </StyledValue>
+            ) : (
+              <ValueSkeleton />
+            )}
             <StyledSupplyLabel href={tokenUrl} target="_blank">
               {supplyLabel}
             </StyledSupplyLabel>
@@ -76,6 +84,10 @@ const Wrapper = styled.div`
   border-radius: 6px;
   margin: 16px;
   box-sizing: border-box;
+
+  @media (max-width: 920px) {
+    width: calc(100% - 32px);
+  }
 `;
 
 const CardHeader = styled.h2`

@@ -17,8 +17,6 @@ import Page from '../../components/Page';
 import LaunchCountdown from '../../components/LaunchCountdown';
 
 const Bank: React.FC = () => {
-  useEffect(() => window.scrollTo(0, 0));
-
   const { bankId } = useParams();
   const bank = useBank(bankId);
 

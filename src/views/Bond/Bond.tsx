@@ -149,9 +149,6 @@ const StyledCardWrapper = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  @media (max-width: 940px) {
-    width: 80%;
-  }
 `;
 
 const StyledStatsWrapper = styled.div`
@@ -160,7 +157,6 @@ const StyledStatsWrapper = styled.div`
   flex-direction: column;
 
   @media (max-width: 940px) {
-    width: 80%;
     margin: 16px 0;
   }
 `;

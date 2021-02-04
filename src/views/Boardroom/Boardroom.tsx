@@ -25,7 +25,6 @@ import useBoardroomVersion from '../../hooks/useBoardroomVersion';
 import moment from 'moment';
 
 const Boardroom: React.FC = () => {
-  useEffect(() => window.scrollTo(0, 0));
   const { account } = useWallet();
   const { onRedeem } = useRedeemOnBoardroom();
   const stakedBalance = useStakedBalanceOnBoardroom();
