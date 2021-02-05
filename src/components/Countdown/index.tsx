@@ -11,7 +11,6 @@ interface CountdownProps {
 export default function Countdown({ ends, format }: CountdownProps) {
   const remaining = useCountdown(ends);
   const duration = moment.duration(remaining, 'seconds');
-  // @ts-ignore
   const options: moment.DurationFormatSettings = {
     forceLength: false,
     precision: 0,
@@ -19,7 +18,6 @@ export default function Countdown({ ends, format }: CountdownProps) {
     trim: false,
   };
 
-  // @ts-ignore
   let display = ends === 0 ? 'not started' : `Ends in: ${duration.format(format, 0, options)}`;
   display = !!remaining && remaining >= 0 ? display : 'Rewards distribution has ended.';
   return <CountDownIndicator>{display}</CountDownIndicator>;
