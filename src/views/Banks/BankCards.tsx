@@ -74,6 +74,7 @@ interface BankCardProps {
 
 const BankCard: React.FC<BankCardProps> = ({ bank }) => {
   const isLSLP = bank.depositTokenName.includes('LSLP');
+  const isYFLUSD = bank.depositTokenName.includes('YFLUSD');
   const yflUsd = useYflUsd();
   let apy;
   let pool;
@@ -135,7 +136,14 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
               <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
             </StyledDetails>
             <Button text="Select" to={`/bank/${bank.contract}`} />
-            {pool.periodFinish !== false && (
+            {pool.periodFinish !== false && isYFLUSD && (
+              <Countdown
+                ends={pool.periodFinish}
+                format="DD[d] HH[h] mm[m] ss[s]"
+                string="Emission drop (-25%) in:"
+              />
+            )}
+            {pool.periodFinish !== false && !isYFLUSD && (
               <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
             )}
           </StyledContent>

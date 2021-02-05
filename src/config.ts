@@ -110,7 +110,7 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     depositTokenName: 'ETH-YFLUSD-LSLP',
     earnTokenName: 'SYFL',
     finished: false,
-    sort: 3,
+    sort: 1,
   },
   ETHSYFLLPTokenSharePool: {
     name: 'Earn sYFL with sYFL-ETH LSLP',
@@ -118,7 +118,7 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     depositTokenName: 'ETH-SYFL-LSLP',
     earnTokenName: 'SYFL',
     finished: false,
-    sort: 1,
+    sort: 3,
   },
   LINKYFLUSDLPTokenSharePool: {
     name: 'Earn sYFL with YFLUSD-LINK LSLP',
@@ -126,7 +126,7 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     depositTokenName: 'LINK-YFLUSD-LSLP',
     earnTokenName: 'SYFL',
     finished: false,
-    sort: 4,
+    sort: 2,
   },
   LINKSYFLLPTokenSharePool: {
     name: 'Earn sYFL with SYFL-LINK LSLP',
@@ -134,7 +134,7 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     depositTokenName: 'LINK-SYFL-LSLP',
     earnTokenName: 'SYFL',
     finished: false,
-    sort: 2,
+    sort: 4,
   },
 };
 

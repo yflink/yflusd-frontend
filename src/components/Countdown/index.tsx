@@ -7,8 +7,9 @@ import styled from 'styled-components';
 interface CountdownProps {
   ends: number;
   format: string;
+  string?: string;
 }
-export default function Countdown({ ends, format }: CountdownProps) {
+export default function Countdown({ ends, format, string }: CountdownProps) {
   const remaining = useCountdown(ends);
   const duration = moment.duration(remaining, 'seconds');
   const options: moment.DurationFormatSettings = {
@@ -18,7 +19,12 @@ export default function Countdown({ ends, format }: CountdownProps) {
     trim: false,
   };
 
-  let display = ends === 0 ? 'not started' : `Ends in: ${duration.format(format, 0, options)}`;
+  let display =
+    ends === 0
+      ? 'not started'
+      : string
+      ? `${string} ${duration.format(format, 0, options)}`
+      : `Ends in: ${duration.format(format, 0, options)}`;
   display = !!remaining && remaining >= 0 ? display : 'Rewards distribution has ended.';
   return <CountDownIndicator>{display}</CountDownIndicator>;
 }
