@@ -4,7 +4,7 @@ import { BigNumber, Contract, ethers, Overrides } from 'ethers';
 import { decimalToBalance } from './ether-utils';
 import { TransactionResponse } from '@ethersproject/providers';
 import ERC20 from './ERC20';
-import { getDisplayBalance } from '../utils/formatBalance';
+import hexStringToNumber, { getDisplayBalance } from '../utils/formatBalance';
 import { getDefaultProvider } from '../utils/provider';
 import ILinkswapPairABI from './ILinkswapPair.abi.json';
 import POOLABI from './Pool.abi.json';
@@ -74,60 +74,70 @@ export class YflUsd {
         address: '0xA54550653b6F5D55CB8D258a3Ed7c653eb186cC0',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       DOKI: {
         address: '0xFa60fFae050Edda279399209f3BBc0AC59327c88',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       LINK: {
         address: '0x4043D9BF3bC91893604c0281Dac857e6F24824a1',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       MASQ: {
         address: '0x77eAddB37d116D0272fda5d6441e4423950C8427',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       YFL: {
         address: '0x5f35334ef7E38EBE1f94d31E6fC3d78b477f4f91',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       SYAX: {
         address: '0xEB94b4a6700F5b5DaDB9ecb2973bEACB71A17bCD',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'YFLUSD',
       },
       'ETH-YFLUSD-LSLP': {
         address: '0x6DddCc7F963C65b18FdDD842e6553528f014aDeA',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'SYFL',
       },
       'ETH-SYFL-LSLP': {
         address: '0x81C76925E7F41f0306E1147c4659784d4402bD51',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'SYFL',
       },
       'LINK-YFLUSD-LSLP': {
         address: '0x61401c19200B2420f93Bb2EECF4BAA2C193d76e1',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'SYFL',
       },
       'LINK-SYFL-LSLP': {
         address: '0x1b650B522b864f6BF61705A05cc89b2b0e23f9C6',
         totalSupply: 0,
         rewardRate: 0,
+        periodFinish: false,
         rewardToken: 'SYFL',
       },
     };
@@ -385,6 +395,8 @@ export class YflUsd {
       this.pools[symbol].totalSupply = getDisplayBalance(supply, 18, 0);
       const rewardRate = await contract.rewardRate();
       this.pools[symbol].rewardRate = (rewardRate / 1e18) * 86400 * 365;
+      const periodFinish = await contract.periodFinish();
+      this.pools[symbol].periodFinish = hexStringToNumber(periodFinish, 0);
 
       return true;
     } catch (err) {

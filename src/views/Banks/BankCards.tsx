@@ -9,6 +9,7 @@ import useBanks from '../../hooks/useBanks';
 import TokenSymbol from '../../components/TokenSymbol';
 import Notice from '../../components/Notice';
 import useYflUsd from '../../hooks/useYflUsd';
+import Countdown from '../../components/Countdown';
 
 const BankCards: React.FC = () => {
   const [banks] = useBanks();
@@ -132,6 +133,9 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
               <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
             </StyledDetails>
             <Button text="Select" to={`/bank/${bank.contract}`} />
+            {pool.periodFinish !== false && (
+              <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
+            )}
           </StyledContent>
         </CardContent>
       </Card>

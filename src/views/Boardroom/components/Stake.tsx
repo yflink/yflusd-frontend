@@ -64,8 +64,6 @@ const Stake: React.FC = () => {
     />,
   );
 
-  console.log(yflUsd);
-
   return (
     <Card>
       <CardContent>
