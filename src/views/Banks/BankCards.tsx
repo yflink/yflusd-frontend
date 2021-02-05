@@ -111,9 +111,11 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
     apy = perDepositedDollarYearlyReward * 100;
   }
 
+  const hasEnded = pool.periodFinish === 0 && pool.periodFinish !== false;
+
   return (
     <StyledCardWrapper>
-      {apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
+      {!hasEnded && apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
       <Card highlight={bank.depositTokenName.includes('LSLP')}>
         <CardContent>
           <StyledContent>
