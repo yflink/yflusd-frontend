@@ -10,6 +10,7 @@ import TokenSymbol from '../../components/TokenSymbol';
 import Notice from '../../components/Notice';
 import useYflUsd from '../../hooks/useYflUsd';
 import Countdown from '../../components/Countdown';
+import { useCountdown } from '../../components/Countdown/useCountdown';
 
 const BankCards: React.FC = () => {
   const [banks] = useBanks();
@@ -112,7 +113,8 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
     apy = perDepositedDollarYearlyReward * 100;
   }
 
-  const hasEnded = pool.periodFinish === 0 && pool.periodFinish !== false;
+  const remaining = useCountdown(pool.periodFinish);
+  const hasEnded = remaining <= 0 && pool.periodFinish !== false;
 
   return (
     <StyledCardWrapper>
