@@ -132,7 +132,7 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
                   <TokenSymbol symbol="sYFL" size={76} />
                 </CardIcon>
                 <StyledTitle>Earn sYFL</StyledTitle>
-                <StyledDetails>
+                <StyledTeaserDetails>
                   <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
                   <StyledDetail>
                     You'll find all standard LP Reward Pools (ETH | YFLUSD, LINK | YFLUSD, ETH |
@@ -141,7 +141,7 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
                   <StyledDetail>
                     Check periodically for additional LP Reward Pools, that distribute sYFL.
                   </StyledDetail>
-                </StyledDetails>
+                </StyledTeaserDetails>
                 <Button
                   variant="inline"
                   text="LINKSWAP Staking"
@@ -209,6 +209,12 @@ const StyledContent = styled.div`
 
 const StyledDetails = styled.div`
   margin-bottom: ${(props) => props.theme.spacing[6]}px;
+  margin-top: ${(props) => props.theme.spacing[2]}px;
+  text-align: center;
+`;
+
+const StyledTeaserDetails = styled.div`
+  margin-bottom: ${(props) => props.theme.spacing[4]}px;
   margin-top: ${(props) => props.theme.spacing[2]}px;
   text-align: center;
 `;
