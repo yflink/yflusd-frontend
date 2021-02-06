@@ -86,67 +86,66 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
 
   pool = yflUsd.pools[bank.depositTokenName];
   yearlyRateUSD = yflUsd.tokens[pool.rewardToken].usd * pool.rewardRate;
+  const remaining = useCountdown(pool.periodFinish);
+  const hasEnded = remaining <= 0 && pool.periodFinish !== false;
 
   if (isLSLP) {
     switch (bank.depositTokenName) {
       case 'LINK-YFLUSD-LSLP':
-        token = yflUsd.tokens['yflusdLink'];
         break;
       case 'ETH-YFLUSD-LSLP':
-        token = yflUsd.tokens['yflusdEth'];
-        break;
       case 'ETH-SYFL-LSLP':
-        token = yflUsd.tokens['syflEth'];
-        break;
       case 'LINK-SYFL-LSLP':
-        token = yflUsd.tokens['syflLink'];
-        break;
+        return null;
     }
-    TVL =
-      token.token0.amount * yflUsd.tokens[token.token0.symbol].usd +
-      token.token1.amount * yflUsd.tokens[token.token1.symbol].usd;
-    perDepositedDollarYearlyReward = yearlyRateUSD / TVL;
-    apy = perDepositedDollarYearlyReward * 100;
+
+    apy = 0;
   } else {
     TVL = Number(pool.totalSupply) * yflUsd.tokens[bank.depositTokenName].usd;
     perDepositedDollarYearlyReward = yearlyRateUSD / TVL;
     apy = perDepositedDollarYearlyReward * 100;
   }
 
-  const remaining = useCountdown(pool.periodFinish);
-  const hasEnded = remaining <= 0 && pool.periodFinish !== false;
-
   return (
-    <StyledCardWrapper>
+    <StyledCardWrapper width={isYFLUSD ? '100%' : '420px'}>
       {!hasEnded && apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
       <Card highlight={bank.depositTokenName.includes('LSLP')}>
         <CardContent>
           <StyledContent>
-            {isLSLP ? (
-              <CardIcon pair={true}>
-                <TokenSymbol symbol={bank.depositTokenName} size={80} pair={true} />
-              </CardIcon>
+            {!isLSLP ? (
+              <>
+                <CardIcon>
+                  <TokenSymbol symbol={bank.depositTokenName} size={76} />
+                </CardIcon>
+                <StyledTitle>{bank.name}</StyledTitle>
+                <StyledDetails>
+                  <StyledDetail>Deposit {bank.depositTokenName}</StyledDetail>
+                  <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
+                </StyledDetails>
+                <Button text="Select" to={`/bank/${bank.contract}`} />
+                {pool.periodFinish !== false && (
+                  <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
+                )}
+              </>
             ) : (
-              <CardIcon>
-                <TokenSymbol symbol={bank.depositTokenName} size={76} />
-              </CardIcon>
-            )}
-
-            <StyledTitle>{bank.name}</StyledTitle>
-            <StyledDetails>
-              <StyledDetail>Deposit {bank.depositTokenName}</StyledDetail>
-              <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
-            </StyledDetails>
-            <Button text="Select" to={`/bank/${bank.contract}`} />
-            {pool.periodFinish !== false && isYFLUSD && (
-              <Countdown
-                ends={pool.periodFinish}
-                format="DD[d] HH[h] mm[m] ss[s]"
-                string="Emission drop (-25%) in:"
-              />
-            )}
-            {pool.periodFinish !== false && !isYFLUSD && (
-              <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
+              <>
+                <StyledTitle>Earn sYFL</StyledTitle>
+                <StyledDetails>
+                  <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
+                  <StyledDetail>
+                    You'll find all standard pools (ETH|YFLUSD, LINK|YFLUSD, ETH|sYFL and
+                    LINK|sYFL) there
+                  </StyledDetail>
+                  <StyledDetail>
+                    Check periodically for other reward pools, that distribute sYFL
+                  </StyledDetail>
+                </StyledDetails>
+                <Button
+                  variant="inline"
+                  text="LINKSWAP Staking"
+                  href="https://linkswap.app/#/stake"
+                />
+              </>
             )}
           </StyledContent>
         </CardContent>
@@ -183,9 +182,9 @@ const StyledRow = styled.div`
   }
 `;
 
-const StyledCardWrapper = styled.div`
+const StyledCardWrapper = styled.div<{ width?: string }>`
   display: flex;
-  width: 420px;
+  width: ${({ width }) => width};
   max-width: 100%;
   position: relative;
 `;
