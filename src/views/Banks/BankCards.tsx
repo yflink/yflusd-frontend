@@ -79,7 +79,6 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
   const yflUsd = useYflUsd();
   let apy;
   let pool;
-  let token;
   let TVL;
   let yearlyRateUSD;
   let perDepositedDollarYearlyReward;
