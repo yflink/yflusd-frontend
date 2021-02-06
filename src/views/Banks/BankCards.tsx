@@ -128,6 +128,9 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
               </>
             ) : (
               <>
+                <CardIcon>
+                  <TokenSymbol symbol="sYFL" size={76} />
+                </CardIcon>
                 <StyledTitle>Earn sYFL</StyledTitle>
                 <StyledDetails>
                   <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
