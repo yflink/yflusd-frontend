@@ -132,11 +132,11 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
                 <StyledDetails>
                   <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
                   <StyledDetail>
-                    You'll find all standard pools (ETH | YFLUSD, LINK | YFLUSD, ETH | sYFL and
-                    LINK | sYFL) there.
+                    You'll find all standard LP Reward Pools (ETH | YFLUSD, LINK | YFLUSD, ETH |
+                    sYFL and LINK | sYFL) there.
                   </StyledDetail>
                   <StyledDetail>
-                    Check periodically for special reward pools, that distribute sYFL.
+                    Check periodically for additional LP Reward Pools, that distribute sYFL.
                   </StyledDetail>
                 </StyledDetails>
                 <Button
