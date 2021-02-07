@@ -10,18 +10,21 @@ const useStakedBalance = (poolName: ContractName) => {
   const yflUsd = useYflUsd();
 
   const fetchBalance = useCallback(async () => {
-    if(typeof(yflUsd.myAccount) === 'undefined') {
-      return
+    if (typeof yflUsd === 'undefined') {
+      return;
+    }
+    if (typeof yflUsd.myAccount === 'undefined') {
+      return;
     }
     const balance = await yflUsd.stakedBalanceOnBank(poolName, yflUsd.myAccount);
     setBalance(balance);
   }, [yflUsd, poolName, setBalance]);
 
   useEffect(() => {
-      fetchBalance().catch((err) => console.error(err.stack));
+    fetchBalance().catch((err) => console.error(err.stack));
 
-      const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
-      return () => clearInterval(refreshBalance);
+    const refreshBalance = setInterval(fetchBalance, config.refreshInterval);
+    return () => clearInterval(refreshBalance);
   }, [yflUsd, fetchBalance]);
 
   return balance;

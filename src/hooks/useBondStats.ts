@@ -8,6 +8,9 @@ const useBondStats = () => {
   const yflUsd = useYflUsd();
 
   const fetchBondPrice = useCallback(async () => {
+    if (typeof yflUsd === 'undefined') {
+      return;
+    }
     setStat(await yflUsd.getBondStat());
   }, [yflUsd, setStat]);
 

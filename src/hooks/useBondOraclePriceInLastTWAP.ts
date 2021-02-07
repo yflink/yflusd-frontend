@@ -8,6 +8,12 @@ const useBondOraclePriceInLastTWAP = () => {
   const yflUsd = useYflUsd();
 
   const fetchCashPrice = useCallback(async () => {
+    if (typeof yflUsd === 'undefined') {
+      return;
+    }
+    if (typeof yflUsd.myAccount === 'undefined') {
+      return;
+    }
     setPrice(await yflUsd.getBondOraclePriceInLastTWAP());
   }, [yflUsd, setPrice]);
 

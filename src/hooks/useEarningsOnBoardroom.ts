@@ -8,7 +8,7 @@ const useEarningsOnBoardroom = () => {
   const yflUsd = useYflUsd();
 
   const fetchBalance = useCallback(async () => {
-    if (typeof yflUsd.myAccount === 'undefined') {
+    if (typeof yflUsd === 'undefined') {
       return;
     }
     setBalance(await yflUsd.getEarningsOnBoardroom());

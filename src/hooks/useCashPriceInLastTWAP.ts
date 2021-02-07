@@ -8,6 +8,9 @@ const useCashPriceInLastTWAP = () => {
   const yflUsd = useYflUsd();
 
   const fetchCashPrice = useCallback(async () => {
+    if (typeof yflUsd === 'undefined') {
+      return;
+    }
     setPrice(await yflUsd.getCashPriceInLastTWAP());
   }, [yflUsd]);
 
