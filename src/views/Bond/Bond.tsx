@@ -14,7 +14,7 @@ import config from '../../config';
 import LaunchCountdown from '../../components/LaunchCountdown';
 import ExchangeStat from './components/ExchangeStat';
 import useTokenBalance from '../../hooks/useTokenBalance';
-import { getDisplayBalance } from '../../utils/formatBalance';
+import hexStringToNumber, { getDisplayBalance } from '../../utils/formatBalance';
 
 const Bond: React.FC = () => {
   const { path } = useRouteMatch();
@@ -28,7 +28,7 @@ const Bond: React.FC = () => {
 
   const handleBuyBonds = useCallback(
     async (amount: string) => {
-      const tx = await yflUsd.buyBonds(amount);
+      const tx = await yflUsd.buyBonds(amount, cashPrice);
       const bondAmount = Number(amount) / Number(getDisplayBalance(cashPrice));
       addTransaction(tx, {
         summary: `Buy ${bondAmount.toFixed(2)} bYFL with ${amount} YFLUSD`,
@@ -44,7 +44,8 @@ const Bond: React.FC = () => {
     },
     [yflUsd, addTransaction],
   );
-  const cashIsOverpriced = useMemo(() => cashPrice.gt(1.0), [cashPrice]);
+
+  const cashIsOverpriced = hexStringToNumber(String(cashPrice), 18) > 1;
   const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < 1.0, [bondStat]);
 
   const isLaunched = Date.now() >= config.bondLaunchesAt.getTime();

@@ -153,6 +153,7 @@ const StyledCardActions = styled.div`
 
 const StyledDesc = styled.span`
   color: ${(props) => props.theme.color.grey[300]};
+  font-size: 14px;
 `;
 
 const StyledCardContentInner = styled.div`

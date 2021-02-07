@@ -31,8 +31,9 @@ interface StyledLabelProps {
 
 const StyledLabel = styled.div<StyledLabelProps>`
   color: ${(props) => props.color};
-  font-size: 0.8rem;
+  font-size: 16px;
   font-weight: 400;
+  margin: 16px 0 0;
 `;
 
 export default Label;

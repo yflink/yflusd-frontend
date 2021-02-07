@@ -408,9 +408,9 @@ export class YflUsd {
    * Buy bonds with cash.
    * @param amount amount of cash to purchase bonds with.
    */
-  async buyBonds(amount: string | number): Promise<TransactionResponse> {
+  async buyBonds(amount: string | number, price: any): Promise<TransactionResponse> {
     const { Treasury } = this.contracts;
-    return await Treasury.buyBonds(decimalToBalance(amount));
+    return await Treasury.buyBonds(decimalToBalance(amount), price);
   }
 
   /**
