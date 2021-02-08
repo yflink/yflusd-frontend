@@ -103,7 +103,7 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
               </>
             )}
           </StyledCardActions>
-          {action === 'Purchase' && <StyledDesc>Bonds availible: {bondsAvailible}</StyledDesc>}
+          {action === 'Purchase' && <StyledDesc>Bonds Available: {bondsAvailible}</StyledDesc>}
         </StyledCardContentInner>
       </CardContent>
     </Card>
