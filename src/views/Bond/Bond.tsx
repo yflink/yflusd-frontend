@@ -92,12 +92,12 @@ const Bond: React.FC = () => {
               <StyledStatsWrapper>
                 <ExchangeStat
                   tokenName="YFLUSD"
-                  description="Base Price (Last-Day TWAP)"
+                  description="(Last-Hour TWAP)"
                   price={getDisplayBalance(cashPrice, 18, 2)}
                 />
                 <ExchangeStat
                   tokenName="bYFL"
-                  description="Current Price: (YFLUSD)^2"
+                  description="(Current Price)"
                   price={bondStat?.priceInWETH || '-'}
                 />
               </StyledStatsWrapper>
@@ -108,7 +108,7 @@ const Bond: React.FC = () => {
                   fromTokenName="bYFL"
                   toToken={yflUsd.YFLUSD}
                   toTokenName="YFLUSD"
-                  priceDesc={`${getDisplayBalance(bondBalance)} bYFL Available`}
+                  priceDesc={`Your bYFL: ${getDisplayBalance(bondBalance)}`}
                   onExchange={handleRedeemBonds}
                   disabled={!bondStat || bondBalance.eq(0) || cashIsUnderPriced}
                 />

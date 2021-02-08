@@ -22,7 +22,7 @@ export class YflUsd {
   externalTokens: { [name: string]: any };
   boardroomVersionOfUser?: string;
   ethPriceAPI: string;
-
+  treasury: Record<string, any>;
   yflusdEth: Contract;
   syflEth: Contract;
   yflusdLink: Contract;
@@ -173,12 +173,18 @@ export class YflUsd {
       provider,
     );
 
+    this.treasury = {
+      totalSupply: 0,
+      bondsCap: 0,
+    };
+
     this.config = cfg;
     this.provider = provider;
 
     this.getTokenPriceFromLinkswap([this.SYFL, this.syflEth]);
     this.getTokenPricesFromLinkswap();
     this.getPoolStats();
+    this.treasuryStats();
 
     this.getLPTokenPriceFromLinkswap(this.yflusdEth, 'yflusdEth');
     this.getLPTokenPriceFromLinkswap(this.yflusdLink, 'yflusdLink');
@@ -404,11 +410,24 @@ export class YflUsd {
     }
   }
 
+  async treasuryStats(): Promise<boolean> {
+    try {
+      const { Treasury } = this.contracts;
+      const bondsCap = await Treasury.bondCap();
+      this.treasury.bondsCap = getDisplayBalance(bondsCap, 18, 0);
+      const totalBondSupply = await this.BYFL.displayedTotalSupply();
+      this.treasury.totalSupply = totalBondSupply;
+      return true;
+    } catch (err) {
+      console.error(`Failed to fetch bond cap: ${err}`);
+    }
+  }
+
   /**
    * Buy bonds with cash.
    * @param amount amount of cash to purchase bonds with.
    */
-  async buyBonds(amount: string | number, price: any): Promise<TransactionResponse> {
+  async buyBonds(amount: string | number, price: BigNumber): Promise<TransactionResponse> {
     const { Treasury } = this.contracts;
     return await Treasury.buyBonds(decimalToBalance(amount), price);
   }

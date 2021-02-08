@@ -38,10 +38,12 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
   disabled = false,
 }) => {
   const catchError = useCatchError();
-  const {
-    contracts: { Treasury },
-  } = useYflUsd();
-  const [approveStatus, approve] = useApprove(fromToken, Treasury.address);
+  const yflUsd = useYflUsd();
+  const [approveStatus, approve] = useApprove(fromToken, yflUsd.contracts.Treasury.address);
+  const bondsAvailible =
+    yflUsd.treasury.bondsCap - yflUsd.treasury.totalSupply < 0
+      ? 0
+      : yflUsd.treasury.bondsCap - yflUsd.treasury.totalSupply;
 
   const balance = useTokenBalance(fromToken);
   const [onPresent, onDismiss] = useModal(
@@ -92,9 +94,16 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
                 variant="secondary"
               />
             ) : (
-              <Button text={action} onClick={onPresent} disabled={disabled} />
+              <>
+                {action === 'Purchase' && bondsAvailible === 0 ? (
+                  <Button text="Current cap reached" onClick={onPresent} disabled={true} />
+                ) : (
+                  <Button text={action} onClick={onPresent} disabled={disabled} />
+                )}
+              </>
             )}
           </StyledCardActions>
+          {action === 'Purchase' && <StyledDesc>Bonds availible: {bondsAvailible}</StyledDesc>}
         </StyledCardContentInner>
       </CardContent>
     </Card>
@@ -154,6 +163,7 @@ const StyledCardActions = styled.div`
 const StyledDesc = styled.span`
   color: ${(props) => props.theme.color.grey[300]};
   font-size: 14px;
+  margin: 12px 0 0 0;
 `;
 
 const StyledCardContentInner = styled.div`
