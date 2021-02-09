@@ -7,7 +7,7 @@ const configurations: { [env: string]: Configuration } = {
     chainId: ChainId.MAINNET,
     etherscanUrl: 'https://etherscan.io',
     ethPriceAPI: 'https://api.thegraph.com/subgraphs/name/yflink/linkswap-v1',
-    defaultProvider: 'https://mainnet.infura.io/v3/4ce8cf77cb314506a8ab61ce59521079',
+    defaultProvider: 'https://mainnet.infura.io/v3/00a40eb6fa2240a99120eed1155b7f66',
     deployments: require('./yflusd/deployments/deployments.mainnet.json'),
     externalTokens: {
       WETH: ['0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18],
@@ -32,7 +32,7 @@ const configurations: { [env: string]: Configuration } = {
     chainId: ChainId.MAINNET,
     etherscanUrl: 'https://etherscan.io',
     ethPriceAPI: 'https://api.thegraph.com/subgraphs/name/yflink/linkswap-v1',
-    defaultProvider: 'https://mainnet.infura.io/v3/4ce8cf77cb314506a8ab61ce59521079',
+    defaultProvider: 'https://mainnet.infura.io/v3/00a40eb6fa2240a99120eed1155b7f66',
     deployments: require('./yflusd/deployments/deployments.mainnet.json'),
     externalTokens: {
       WETH: ['0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18],
