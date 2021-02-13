@@ -46,7 +46,7 @@ const Bond: React.FC = () => {
   );
 
   const cashIsOverpriced = hexStringToNumber(String(cashPrice), 18) > 1;
-  const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < 1.0, [bondStat]);
+  const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < 1.05, [bondStat]);
 
   const isLaunched = Date.now() >= config.bondLaunchesAt.getTime();
   if (!isLaunched) {
@@ -71,7 +71,8 @@ const Bond: React.FC = () => {
             <StyledBond>
               <StyledCardWrapper>
                 <ExchangeCard
-                  action="Purchase"
+                  headline="Buy Bonds"
+                  action={cashIsOverpriced ? 'YFLUSD is over $1' : 'Purchase'}
                   fromToken={yflUsd.YFLUSD}
                   fromTokenName="YFLUSD"
                   toToken={yflUsd.BYFL}
@@ -82,7 +83,7 @@ const Bond: React.FC = () => {
                       : cashIsUnderPriced
                       ? `${Math.floor(
                           100 / Number(bondStat.priceInWETH) - 100,
-                        )}% return when YFLUSD > $1`
+                        )}% return when YFLUSD > $1.05`
                       : '-'
                   }
                   onExchange={handleBuyBonds}
@@ -103,7 +104,8 @@ const Bond: React.FC = () => {
               </StyledStatsWrapper>
               <StyledCardWrapper>
                 <ExchangeCard
-                  action="Redeem"
+                  headline="Redeem YFLUSD"
+                  action={cashIsUnderPriced ? 'Bonds are under $1.05' : 'Redeem'}
                   fromToken={yflUsd.BYFL}
                   fromTokenName="bYFL"
                   toToken={yflUsd.YFLUSD}

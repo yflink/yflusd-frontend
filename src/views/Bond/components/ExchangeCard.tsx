@@ -18,6 +18,7 @@ import useCatchError from '../../../hooks/useCatchError';
 
 interface ExchangeCardProps {
   action: string;
+  headline?: string;
   fromToken: ERC20;
   fromTokenName: string;
   toToken: ERC20;
@@ -28,6 +29,7 @@ interface ExchangeCardProps {
 }
 
 const ExchangeCard: React.FC<ExchangeCardProps> = ({
+  headline,
   action,
   fromToken,
   fromTokenName,
@@ -63,7 +65,7 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
     <Card>
       <CardContent>
         <StyledCardContentInner>
-          <StyledCardTitle>{`${action} ${toTokenName}`}</StyledCardTitle>
+          <StyledCardTitle>{headline ? headline : `${action} ${toTokenName}`}</StyledCardTitle>
           <StyledExchanger>
             <StyledToken>
               <StyledCardIcon>
@@ -98,7 +100,9 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
                 {action === 'Purchase' && bondsAvailible === 0 ? (
                   <Button text="Current cap reached" onClick={onPresent} disabled={true} />
                 ) : (
-                  <Button text={action} onClick={onPresent} disabled={disabled} />
+                  <>
+                    <Button text={action} onClick={onPresent} disabled={disabled} />
+                  </>
                 )}
               </>
             )}
