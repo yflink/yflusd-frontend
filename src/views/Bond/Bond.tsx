@@ -108,7 +108,7 @@ const Bond: React.FC = () => {
               <StyledCardWrapper>
                 <ExchangeCard
                   headline="Redeem YFLUSD"
-                  action={cashIsUnderPriced ? 'Bonds are under $1.05' : 'Redeem'}
+                  action={cashIsUnderPriced ? `Bonds are under $${ceilingPrice}` : 'Redeem'}
                   fromToken={yflUsd.BYFL}
                   fromTokenName="bYFL"
                   toToken={yflUsd.YFLUSD}
