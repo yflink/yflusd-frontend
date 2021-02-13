@@ -45,8 +45,11 @@ const Bond: React.FC = () => {
     [yflUsd, addTransaction],
   );
 
+  const ceilingPrice = yflUsd?.treasury ? yflUsd.treasury.ceilingPrice : 1.05;
   const cashIsOverpriced = hexStringToNumber(String(cashPrice), 18) > 1;
-  const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < 1.05, [bondStat]);
+  const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < ceilingPrice, [
+    bondStat,
+  ]);
 
   const isLaunched = Date.now() >= config.bondLaunchesAt.getTime();
   if (!isLaunched) {
@@ -83,7 +86,7 @@ const Bond: React.FC = () => {
                       : cashIsUnderPriced
                       ? `${Math.floor(
                           100 / Number(bondStat.priceInWETH) - 100,
-                        )}% return when YFLUSD > $1.05`
+                        )}% return when YFLUSD > ${ceilingPrice}`
                       : '-'
                   }
                   onExchange={handleBuyBonds}

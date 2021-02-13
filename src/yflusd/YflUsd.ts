@@ -176,6 +176,7 @@ export class YflUsd {
     this.treasury = {
       totalSupply: 0,
       bondsCap: 0,
+      ceilingPrice: 1.05,
     };
 
     this.config = cfg;
@@ -414,7 +415,9 @@ export class YflUsd {
     try {
       const { Treasury } = this.contracts;
       const bondsCap = await Treasury.bondCap();
-      this.treasury.bondsCap = getDisplayBalance(bondsCap, 18, 0);
+      this.treasury.bondsCap = bondsCap.toNumber();
+      const ceilingPrice = await Treasury.getCeilingPrice();
+      this.treasury.ceilingPrice = ceilingPrice.toNumber();
       const totalBondSupply = await this.BYFL.displayedTotalSupply();
       this.treasury.totalSupply = totalBondSupply;
       return true;
