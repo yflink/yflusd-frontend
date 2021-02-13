@@ -48,6 +48,7 @@ const Bond: React.FC = () => {
   const ceilingPrice = yflUsd?.treasury ? yflUsd.treasury.ceilingPrice : 1.05;
   const cashIsOverpriced = hexStringToNumber(String(cashPrice), 18) > 1;
   const cashIsUnderPriced = useMemo(() => Number(bondStat?.priceInWETH) < ceilingPrice, [
+    ceilingPrice,
     bondStat,
   ]);
 
