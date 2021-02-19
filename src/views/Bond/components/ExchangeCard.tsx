@@ -42,10 +42,6 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
   const catchError = useCatchError();
   const yflUsd = useYflUsd();
   const [approveStatus, approve] = useApprove(fromToken, yflUsd.contracts.Treasury.address);
-  const bondsAvailible =
-    yflUsd.treasury.bondsCap - yflUsd.treasury.totalSupply < 0
-      ? 0
-      : yflUsd.treasury.bondsCap - yflUsd.treasury.totalSupply;
 
   const balance = useTokenBalance(fromToken);
   const [onPresent, onDismiss] = useModal(
