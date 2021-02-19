@@ -96,18 +96,9 @@ const ExchangeCard: React.FC<ExchangeCardProps> = ({
                 variant="secondary"
               />
             ) : (
-              <>
-                {action === 'Purchase' && bondsAvailible === 0 ? (
-                  <Button text="Current cap reached" onClick={onPresent} disabled={true} />
-                ) : (
-                  <>
-                    <Button text={action} onClick={onPresent} disabled={disabled} />
-                  </>
-                )}
-              </>
+              <Button text={action} onClick={onPresent} disabled={disabled} />
             )}
           </StyledCardActions>
-          {action === 'Purchase' && <StyledDesc>Bonds Available: {bondsAvailible}</StyledDesc>}
         </StyledCardContentInner>
       </CardContent>
     </Card>
