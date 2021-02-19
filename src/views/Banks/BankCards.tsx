@@ -105,55 +105,59 @@ const BankCard: React.FC<BankCardProps> = ({ bank }) => {
     apy = perDepositedDollarYearlyReward * 100;
   }
 
-  return (
-    <StyledCardWrapper width={isYFLUSD ? '100%' : '420px'}>
-      {!hasEnded && apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
-      <Card highlight={bank.depositTokenName.includes('LSLP')}>
-        <CardContent>
-          <StyledContent>
-            {!isLSLP ? (
-              <>
-                <CardIcon>
-                  <TokenSymbol symbol={bank.depositTokenName} size={76} />
-                </CardIcon>
-                <StyledTitle>{bank.name}</StyledTitle>
-                <StyledDetails>
-                  <StyledDetail>Deposit {bank.depositTokenName}</StyledDetail>
-                  <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
-                </StyledDetails>
-                <Button text="Select" to={`/bank/${bank.contract}`} />
-                {pool.periodFinish !== false && (
-                  <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
-                )}
-              </>
-            ) : (
-              <>
-                <CardIcon>
-                  <TokenSymbol symbol="sYFL" size={76} />
-                </CardIcon>
-                <StyledTitle>Earn sYFL</StyledTitle>
-                <StyledTeaserDetails>
-                  <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
-                  <StyledDetail>
-                    You'll find all standard LP Reward Pools (ETH | YFLUSD, LINK | YFLUSD, ETH |
-                    sYFL and LINK | sYFL) there.
-                  </StyledDetail>
-                  <StyledDetail>
-                    Check periodically for additional LP Reward Pools, that distribute sYFL.
-                  </StyledDetail>
-                </StyledTeaserDetails>
-                <Button
-                  variant="inline"
-                  text="LINKSWAP Staking"
-                  href="https://linkswap.app/#/stake"
-                />
-              </>
-            )}
-          </StyledContent>
-        </CardContent>
-      </Card>
-    </StyledCardWrapper>
-  );
+  if (isYFLUSD) {
+    return (
+      <StyledCardWrapper width={isYFLUSD ? '100%' : '420px'}>
+        {!hasEnded && apy > 0 && <APYIndicator>APY: ~{apy.toFixed(2)}%</APYIndicator>}
+        <Card highlight={bank.depositTokenName.includes('LSLP')}>
+          <CardContent>
+            <StyledContent>
+              {!isLSLP ? (
+                <>
+                  <CardIcon>
+                    <TokenSymbol symbol={bank.depositTokenName} size={76} />
+                  </CardIcon>
+                  <StyledTitle>{bank.name}</StyledTitle>
+                  <StyledDetails>
+                    <StyledDetail>Deposit {bank.depositTokenName}</StyledDetail>
+                    <StyledDetail>Earn {bank.earnTokenName}</StyledDetail>
+                  </StyledDetails>
+                  <Button text="Select" to={`/bank/${bank.contract}`} />
+                  {pool.periodFinish !== false && (
+                    <Countdown ends={pool.periodFinish} format="DD[d] HH[h] mm[m] ss[s]" />
+                  )}
+                </>
+              ) : (
+                <>
+                  <CardIcon>
+                    <TokenSymbol symbol="sYFL" size={76} />
+                  </CardIcon>
+                  <StyledTitle>Earn sYFL</StyledTitle>
+                  <StyledTeaserDetails>
+                    <StyledDetail>Please use the staking interface on LINKSWAP!</StyledDetail>
+                    <StyledDetail>
+                      You'll find all standard LP Reward Pools (ETH | YFLUSD, LINK | YFLUSD, ETH
+                      | sYFL and LINK | sYFL) there.
+                    </StyledDetail>
+                    <StyledDetail>
+                      Check periodically for additional LP Reward Pools, that distribute sYFL.
+                    </StyledDetail>
+                  </StyledTeaserDetails>
+                  <Button
+                    variant="inline"
+                    text="LINKSWAP Staking"
+                    href="https://linkswap.app/#/stake"
+                  />
+                </>
+              )}
+            </StyledContent>
+          </CardContent>
+        </Card>
+      </StyledCardWrapper>
+    );
+  } else {
+    return null;
+  }
 };
 
 const StyledCards = styled.div`
