@@ -87,7 +87,7 @@ const Bond: React.FC = () => {
                       : cashIsUnderPriced
                       ? `${Math.floor(
                           100 / Number(bondStat.priceInWETH) - 100,
-                        )}% return when YFLUSD > ${ceilingPrice}`
+                        )}% return when YFLUSD > $${ceilingPrice}`
                       : '-'
                   }
                   onExchange={handleBuyBonds}
